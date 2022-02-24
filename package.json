@@ -1,28 +1,29 @@
 {
-  "name": "emmijozzy_fcc_all_exercises",
-  "version": "1.0.0",
-  "description": "This project contain the accumulation of all back end freecodecamp projects",
-  "main": "index.js",
-  "directories": {
-    "lib": "lib"
-  },
-  "scripts": {
-    "test": "npm start"
-  },
-  "keywords": [
-    "freecodecamp",
-    "express",
-    "api"
-  ],
-  "author": "Ogunsiyi Joseph Oluwaseun",
-  "license": "MIT",
-  "dependencies": {
-    "body-parser": "^1.19.2",
-    "config": "^3.3.7",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
-    "express": "^4.17.3",
-    "mongodb": "^4.4.0",
-    "mongoose": "^6.2.3"
-  }
+	"name": "emmijozzy_fcc_all_exercises",
+	"author": "Ogunsuyi Joseph Oluwaseun",
+	"version": "1.0.0",
+	"description": "A REST API project, part of Free Code Camp's curriculum",
+	"main": "server.js",
+	"scripts": {
+		"start": "nodemon server.js"
+	},
+	"dependencies": {
+		"body-parser": "^1.19.2",
+		"cors": "^2.8.5",
+		"dotenv": "^8.2.0",
+		"express": "^4.16.4",
+		"mongodb": "^4.4.0",
+		"mongoose": "^6.2.3"
+	},
+	"repository": {
+		"url": "https://github.com/Emmijozzy/emmijozzy_fcc_all_exercises"
+	},
+	"license": "MIT",
+	"keywords": [
+		"node",
+		"express"
+	],
+	"devDependencies": {
+		"nodemon": "^2.0.15"
+	}
 }
