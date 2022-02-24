@@ -1,0 +1,19 @@
+{
+  "name": "emmijozzy_fcc_all_exercises",
+  "version": "1.0.0",
+  "description": "This project contain the accumulation of all back end freecodecamp projects",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "npm start"
+  },
+  "keywords": [
+    "freecodecamp",
+    "express",
+    "api"
+  ],
+  "author": "Ogunsiyi Joseph Oluwaseun",
+  "license": "MIT"
+}
