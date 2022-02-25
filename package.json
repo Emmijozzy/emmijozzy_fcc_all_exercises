@@ -5,8 +5,7 @@
 	"description": "A REST API project, part of Free Code Camp's curriculum",
 	"main": "server.js",
 	"scripts": {
-		"start": "node server.js",
-		"build" : "nodemon server.js"
+		"start": "node server.js"
 	},
 	"dependencies": {
 		"body-parser": "^1.19.2",
