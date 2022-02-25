@@ -39,11 +39,11 @@ controller.time = async (req, res) => {
               "unix": date.getTime(),
               "utc": date.toUTCString()
             })
-          } else if(passInValue !== "Invalid Date") {
-            res.status(200).json({"unix": passInValue.getTime(),"utc": passInValue.toUTCString()})      
-        } else {
+          } else if(passInValue == "Invalid Date"){
             res.status(500).json({ error : "Invalid Date" })
-        }
+          } else {
+            res.status(200).json({"unix": passInValue.getTime(),"utc": passInValue.toUTCString()})
+          }
     } catch (err) {
         console.log(err)
         res.status(500).json(err)
