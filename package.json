@@ -6,7 +6,7 @@
 	"main": "server.js",
 	"scripts": {
 		"start": "node server.js",
-		"dev Start" : "nodemon server.js"
+		"build" : "nodemon server.js"
 	},
 	"dependencies": {
 		"body-parser": "^1.19.2",

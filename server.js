@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const timestamp = require('./routes/timeStamp.js')
+const headparser = require('./routes/headparser.js')
 const home = require('./controllers/index.js')
 
 const app = express()
@@ -12,7 +13,7 @@ app.use(cors())
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }))
 
-app.use('/api', timestamp)
+app.use('/api', headparser, timestamp );
 
 app.get('/', home)
 
