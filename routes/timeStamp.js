@@ -7,7 +7,7 @@
 // Dependencies
 const express = require('express')
 const router = express.Router()
-const controller = require('./../controllers/timestamp');
+const controller = require('./../controllers/timestamp.js');
 
 // logics
 // home

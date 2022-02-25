@@ -2,8 +2,8 @@ require('dotenv').config()
 
 const express = require('express')
 const cors = require('cors')
-const timestamp = require('./routes/timeStamp')
-const home = require('./controllers')
+const timestamp = require('./routes/timeStamp.js')
+const home = require('./controllers/index.js')
 
 const app = express()
 const PORT = Number(process.env.PORT) || 3000
