@@ -5,6 +5,7 @@ const cors = require('cors')
 const timestamp = require('./routes/timeStamp.js')
 const headparser = require('./routes/headparser.js')
 const urlshortener = require('./routes/urlshortener')
+const metadata = require('./routes/metadata')
 const home = require('./controllers/index.js')
 const mongo_connect = require('./config')
 const bodyParser = require('body-parser')
@@ -18,7 +19,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
 
-app.use('/api', urlshortener, headparser,  timestamp);
+app.use('/api' , metadata , urlshortener, headparser, timestamp);
 
 app.get('/', home)
 
