@@ -56,6 +56,7 @@ controllers.postExercise = async (req, res) => {
     description = typeof description == 'string' && description.trim().length > 0 ? description.trim() : false;
     duration = typeof duration == 'number' && duration > 0 ? duration : false;
     date = typeof date == 'string' ?  new Date(date) : new date();
+    date = date == "Invalid Date" ? new Date() : date
     date = date.toDateString()
     if(userId && description && duration && date) {
         const userDetails = {
