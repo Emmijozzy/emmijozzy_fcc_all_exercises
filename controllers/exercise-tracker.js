@@ -62,14 +62,14 @@ controllers.postExercise = async (req, res) => {
         username: user.username,
         description : description,
         duration : duration,
-        date : date
+        date : (new Date (date)).toDateString()
       })
 
       const exercises = await newExer.save();
       if (!exercises) throw { msg: 'FailedPostExercise' }
       user.description = exercises.description
       user.duration = exercises.duration
-      user.date = new Date(exercises.date).toDateString()
+      user.date = exercises.date
     //   console.log(user)
       delete user.__v
       res.status(201).json(user)
@@ -112,7 +112,7 @@ controllers.getLogs = async (req, res) => {
           return {
               description : exercise.description,
               duration : exercise.duration,
-              date : (new Date(exercise.date)).toDateString(),
+              date : exercise.date,
           }
         })
 
