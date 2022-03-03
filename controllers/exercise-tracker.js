@@ -48,72 +48,102 @@ controllers.getUser = async (req, res) => {
 
 // post exercise 
 controllers.postExercise = async (req, res) => {
-    let {description, duration, date } = req.body;
-    let userId = req.body[':_id'];
-    duration = +(duration);
-    // validation of input
-    userId = typeof userId == 'string' && userId.trim().length == 24 ? userId.trim() : false;
-    description = typeof description == 'string' && description.trim().length > 0 ? description.trim() : false;
-    duration = typeof duration == 'number' && duration > 0 ? duration : false;
-    date = typeof date == 'string' ?  new Date(date) : new date();
-    date = date == "Invalid Date" ? new Date() : date
-    date = date.toDateString()
-    if(userId && description && duration && date) {
-        const userDetails = {
-            userId,
-            description,
-            duration,
-            date
-        }
-        console.log(userDetails.date)
-        console.log('Requirement met')
-        try {
-            const user = await User.findById(userId)
-            if(!user) throw {msg : 'User not found / Error in finding user'}
-            console.log(user.username)
-            const savedExer = await exercise.find({username : user.username})
-            if(!savedExer[0]) {
-                const newExer = await exercise.create( {
-                        username : user.username,
-                        count : 1,
-                        _id : userId,
-                        log : [{
-                            description: userDetails.description,
-                            duration: userDetails.duration,
-                            date: userDetails.date
-                        }]
-                    })
-                    console.log(newExer)
-            } else {
-                exercise.updateOne({_id: userId, "log._id": savedExer[0].log[0].id}, 
-                {
-                 count: (savedExer[0].log.length) + 1,
-                 "$push" : {log: {
-                    description: userDetails.description,
-                    duration: userDetails.duration,
-                    date: userDetails.date
-                   }
-                 }
-                }, (err, updateLog) => {
-                 if(err) console.log(err)
-                 console.log('succesfully Update data ')
-               })
-            }
-            res.status(200).json({
-                username: user.username,
-                description: userDetails.description,
-                duration: userDetails.duration,
-                date: userDetails.date,
-                _id: userId
-              })
-        } catch (err) {
-            console.log(err)
-            res.status(500).send(err)
-        }
+    // let {description, duration, date } = req.body;
+    // let userId = req.body[':_id'];
+    // duration = +(duration);
+    // // validation of input
+    // userId = typeof userId == 'string' && userId.trim().length == 24 ? userId.trim() : false;
+    // description = typeof description == 'string' && description.trim().length > 0 ? description.trim() : false;
+    // duration = typeof duration == 'number' && duration > 0 ? duration : false;
+    // date = typeof date == 'string' ?  new Date(date) : new date();
+    // date = date == "Invalid Date" ? new Date() : date
+    // date = date.toDateString()
+    // if(userId && description && duration && date) {
+    //     const userDetails = {
+    //         userId,
+    //         description,
+    //         duration,
+    //         date
+    //     }
+    //     console.log(userDetails.date)
+    //     console.log('Requirement met')
+    //     try {
+    //         const user = await User.findById(userId)
+    //         if(!user) throw {msg : 'User not found / Error in finding user'}
+    //         console.log(user.username)
+    //         const savedExer = await exercise.find({username : user.username})
+    //         if(!savedExer[0]) {
+    //             const newExer = await exercise.create( {
+    //                     username : user.username,
+    //                     count : 1,
+    //                     _id : userId,
+    //                     log : [{
+    //                         description: userDetails.description,
+    //                         duration: userDetails.duration,
+    //                         date: userDetails.date
+    //                     }]
+    //                 })
+    //                 console.log(newExer)
+    //         } else {
+    //             exercise.updateOne({_id: userId, "log._id": savedExer[0].log[0].id}, 
+    //             {
+    //              count: (savedExer[0].log.length) + 1,
+    //              "$push" : {log: {
+    //                 description: userDetails.description,
+    //                 duration: userDetails.duration,
+    //                 date: userDetails.date
+    //                }
+    //              }
+    //             }, (err, updateLog) => {
+    //              if(err) console.log(err)
+    //              console.log('succesfully Update data ')
+    //            })
+    //         }
+    //         res.status(200).json({
+    //             username: user.username,
+    //             description: userDetails.description,
+    //             duration: userDetails.duration,
+    //             date: userDetails.date,
+    //             _id: userId
+    //           })
+    //     } catch (err) {
+    //         console.log(err)
+    //         res.status(500).send(err)
+    //     }
 
-    } else {
-        console.log({"Error" : "Missing require field"});
-        res.status(500).send({"Error" : "Missing require field"})
+    // } else {
+    //     console.log({"Error" : "Missing require field"});
+    //     res.status(500).send({"Error" : "Missing require field"})
+    // }
+    const { _id } = req.params
+    const { description, duration } = req.body
+    let { date } = req.body
+    const checkDate = new Date(date)
+    if (!date || checkDate.toString() === 'Invalid Date') date = undefined
+    try {
+      const user = await User.findById(_id).lean()
+      if (!user) throw {msg: 'UserNotFound'}
+    //   console.log(user)
+
+      const newExer = new exercise ( {
+        username: user.username,
+        description : description,
+        duration : duration,
+        date : date
+      })
+
+      const exercises = await newExer.save();
+      if (!exercises) throw { msg: 'FailedPostExercise' }
+    //   console.log(exercises)
+      user.description = exercises.description
+      user.duration = exercises.duration
+      user.date = new Date(exercises.date).toDateString()
+    //   console.log(user)
+      delete user.__v
+      res.status(201).json(user)
+    } catch (err) {
+      console.log(err)
+      res.status(500).json(err)
     }
 
 
