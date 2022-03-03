@@ -120,9 +120,9 @@ controllers.getLogs = async (req, res) => {
         
         const exerciseCount = exerciseList.length;
         res.json({
+            _id: id,
           username: username,
           count: exerciseCount,
-          _id: id,
           log: exerciseList
         });
       });
