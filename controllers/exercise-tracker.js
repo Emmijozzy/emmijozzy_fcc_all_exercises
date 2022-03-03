@@ -116,7 +116,7 @@ controllers.getLogs = async (req, res) => {
           }
         })
 
-        exerciseList.splice(0,1)
+        // exerciseList.splice(0,1)
         
         const exerciseCount = exerciseList.length;
         res.json({
