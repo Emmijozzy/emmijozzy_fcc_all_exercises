@@ -108,16 +108,26 @@ controllers.getLogs = async (req, res) => {
       exerciseQuery.exec(function (err, exercises) {
         if (err) console.error(err);
   
-        const exerciseCount = exercises.length;
         const exerciseList = exercises.map(function (exercise) {
           return {
-            description : exercise.description,
-            duration : exercise.duration,
-            // date : (new Date(exercise.date)).toDateString(),
-            date : exercise.date
+              description : exercise.description,
+              duration : exercise.duration,
+              date : (new Date(exercise.date)).toDateString(),
+            // date : exercise.date
           }
         })
-  
+
+        // const exercisefilter = exerciseList.filter(exercise => {
+        //     return {
+        //         description : exercise.description,
+        //         duration : exercise.duration,
+        //         date : (new Date(exercise.date)).toDateString(),
+        //         // date : exercise.date
+        //     }
+        // } )
+        exerciseList.splice(0,1)
+        
+        const exerciseCount = exerciseList.length;
         res.json({
           username: username,
           count: exerciseCount,
