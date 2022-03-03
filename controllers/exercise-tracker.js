@@ -113,18 +113,9 @@ controllers.getLogs = async (req, res) => {
               description : exercise.description,
               duration : exercise.duration,
               date : (new Date(exercise.date)).toDateString(),
-            // date : exercise.date
           }
         })
 
-        // const exercisefilter = exerciseList.filter(exercise => {
-        //     return {
-        //         description : exercise.description,
-        //         duration : exercise.duration,
-        //         date : (new Date(exercise.date)).toDateString(),
-        //         // date : exercise.date
-        //     }
-        // } )
         exerciseList.splice(0,1)
         
         const exerciseCount = exerciseList.length;
