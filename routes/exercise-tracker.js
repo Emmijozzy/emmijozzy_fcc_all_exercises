@@ -15,5 +15,8 @@ router.get('/users', controllers.getUser)
 // post Exercise
 router.post ('/users/:_id/exercises', controllers.postExercise)
 
+// get logs
+router.get('/users/:_id/logs', controllers.getLogs)
+
 // export of module
 module.exports = router

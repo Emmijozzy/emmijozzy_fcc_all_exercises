@@ -48,73 +48,7 @@ controllers.getUser = async (req, res) => {
 
 // post exercise 
 controllers.postExercise = async (req, res) => {
-    // let {description, duration, date } = req.body;
-    // let userId = req.body[':_id'];
-    // duration = +(duration);
-    // // validation of input
-    // userId = typeof userId == 'string' && userId.trim().length == 24 ? userId.trim() : false;
-    // description = typeof description == 'string' && description.trim().length > 0 ? description.trim() : false;
-    // duration = typeof duration == 'number' && duration > 0 ? duration : false;
-    // date = typeof date == 'string' ?  new Date(date) : new date();
-    // date = date == "Invalid Date" ? new Date() : date
-    // date = date.toDateString()
-    // if(userId && description && duration && date) {
-    //     const userDetails = {
-    //         userId,
-    //         description,
-    //         duration,
-    //         date
-    //     }
-    //     console.log(userDetails.date)
-    //     console.log('Requirement met')
-    //     try {
-    //         const user = await User.findById(userId)
-    //         if(!user) throw {msg : 'User not found / Error in finding user'}
-    //         console.log(user.username)
-    //         const savedExer = await exercise.find({username : user.username})
-    //         if(!savedExer[0]) {
-    //             const newExer = await exercise.create( {
-    //                     username : user.username,
-    //                     count : 1,
-    //                     _id : userId,
-    //                     log : [{
-    //                         description: userDetails.description,
-    //                         duration: userDetails.duration,
-    //                         date: userDetails.date
-    //                     }]
-    //                 })
-    //                 console.log(newExer)
-    //         } else {
-    //             exercise.updateOne({_id: userId, "log._id": savedExer[0].log[0].id}, 
-    //             {
-    //              count: (savedExer[0].log.length) + 1,
-    //              "$push" : {log: {
-    //                 description: userDetails.description,
-    //                 duration: userDetails.duration,
-    //                 date: userDetails.date
-    //                }
-    //              }
-    //             }, (err, updateLog) => {
-    //              if(err) console.log(err)
-    //              console.log('succesfully Update data ')
-    //            })
-    //         }
-    //         res.status(200).json({
-    //             username: user.username,
-    //             description: userDetails.description,
-    //             duration: userDetails.duration,
-    //             date: userDetails.date,
-    //             _id: userId
-    //           })
-    //     } catch (err) {
-    //         console.log(err)
-    //         res.status(500).send(err)
-    //     }
-
-    // } else {
-    //     console.log({"Error" : "Missing require field"});
-    //     res.status(500).send({"Error" : "Missing require field"})
-    // }
+   
     const { _id } = req.params
     const { description, duration } = req.body
     let { date } = req.body
@@ -123,7 +57,6 @@ controllers.postExercise = async (req, res) => {
     try {
       const user = await User.findById(_id).lean()
       if (!user) throw {msg: 'UserNotFound'}
-    //   console.log(user)
 
       const newExer = new exercise ( {
         username: user.username,
@@ -134,7 +67,6 @@ controllers.postExercise = async (req, res) => {
 
       const exercises = await newExer.save();
       if (!exercises) throw { msg: 'FailedPostExercise' }
-    //   console.log(exercises)
       user.description = exercises.description
       user.duration = exercises.duration
       user.date = new Date(exercises.date).toDateString()
@@ -147,27 +79,54 @@ controllers.postExercise = async (req, res) => {
     }
 
 
+}
 
-
+// get logs
+controllers.getLogs = async (req, res) => {
+    const id = req.params._id;
+    const from = req.query.from;
+    const to = req.query.to;
+    const limit = req.query.limit;
+  
+    User.findById(id, "username", function (err, user) {
+      if (err) console.error(err);
+  
+      const username = user.username;
+      let queryFilter = { username: username };
+      let queryOptions = {};
+  
+      if (from || to) {
+        queryFilter.date = {};
+        if (from) queryFilter.date.$gte = Date.parse(from);
+        if (to) queryFilter.date.$lte = Date.parse(to);
+      }
+  
+      if (limit) queryOptions.limit = Number(limit);
+  
+      const exerciseQuery = exercise.find(queryFilter, "description duration date", queryOptions);
+  
+      exerciseQuery.exec(function (err, exercises) {
+        if (err) console.error(err);
+  
+        const exerciseCount = exercises.length;
+        const exerciseList = exercises.map(function (exercise) {
+          return {
+            description : exercise.description,
+            duration : exercise.duration,
+            // date : (new Date(exercise.date)).toDateString(),
+            date : exercise.date
+          }
+        })
+  
+        res.json({
+          username: username,
+          count: exerciseCount,
+          _id: id,
+          log: exerciseList
+        });
+      });
+    });
 }
 
 // export of module
 module.exports = controllers
-
-
-
-// console.log(user['_id'])
-// const newExer = new exercise ( {
-//     username : user.username,
-//     count : 1,
-//     _id : userId,
-//     log : [{
-//         description: userDetails.description,
-//         duration: userDetails.duration,
-//         date: userDetails.date
-//     }]
-// })
-// console.log(newExer)
-// const savedExer = await newExer.save();
-// if(!savedExer) throw {msg : 'Unable to save Your exercise'}
-// res.json(savedExer)
