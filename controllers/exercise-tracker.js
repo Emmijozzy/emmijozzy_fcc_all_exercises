@@ -62,14 +62,14 @@ controllers.postExercise = async (req, res) => {
         username: user.username,
         description : description,
         duration : duration,
-        date : (new Date (date)).toDateString()
+        date : new Date (date)
       })
 
       const exercises = await newExer.save();
       if (!exercises) throw { msg: 'FailedPostExercise' }
       user.description = exercises.description
       user.duration = exercises.duration
-      user.date = exercises.date
+      user.date = (new Date (exercises.date)).toDateString()
     //   console.log(user)
       delete user.__v
       res.status(201).json(user)
@@ -83,36 +83,67 @@ controllers.postExercise = async (req, res) => {
 // get logs
 controllers.getLogs = async (req, res) => {
     const id = req.params._id;
-    const from = req.query.from;
-    const to = req.query.to;
-    const limit = req.query.limit;
+    let from = req.query.from;
+    let to = req.query.to;
+    let limit = req.query.limit;
   
     User.findById(id, "username", function (err, user) {
       if (err) console.error(err);
   
       const username = user.username;
       let queryFilter = { username: username };
-      let queryOptions = {};
+    //   let queryOptions = {};
   
-      if (from || to) {
-        queryFilter.date = {};
-        if (from) queryFilter.date.$gte = Date.parse(from);
-        if (to) queryFilter.date.$lte = Date.parse(to);
-      }
+    //   if (from || to) {
+    //     queryFilter.date = {};
+    //     if (from) queryFilter.date.$gte = Date.parse(from);
+    //     if (to) queryFilter.date.$lte = Date.parse(to);
+    //   }
   
-      if (limit) queryOptions.limit = Number(limit);
+    //   if (limit) queryOptions.limit = Number(limit);
+        if (from) {
+            from = new Date(from).getTime()
+        } else {
+            from = new Date(0).getTime()
+        }
+        if (to) {
+            to = new Date(to).getTime()
+        } else {
+            to = new Date().getTime() //make the date equal to now, so get query till current date
+        }
+        if (limit === undefined) {
+            limit = 0
+        }
+
+        // console.log(to, from, limit)
   
-      const exerciseQuery = exercise.find(queryFilter, "description duration date", queryOptions);
+      const exerciseQuery = exercise.find(queryFilter, "description duration date").limit(limit);
   
       exerciseQuery.exec(function (err, exercises) {
         if (err) console.error(err);
   
-        const exerciseList = exercises.map(function (exercise) {
+        let exerciseList = exercises.map(function (exercise) {
           return {
               description : exercise.description,
               duration : exercise.duration,
               date : exercise.date,
           }
+        })
+        exercises.map(exercise => {
+            date = new Date(exercise.date).getTime()
+            // console.log(date)
+            return(date)
+        })
+        exerciseList = exerciseList.filter(log => {
+            return (new Date(log.date)).getTime() >= from &&  (new Date(log.date)).getTime() <= to
+          })
+
+        exerciseList = exerciseList.map(exercise => {
+            return {
+                description : exercise.description,
+                duration : exercise.duration,
+                date : new Date(exercise.date).toDateString()
+            }
         })
 
         // exerciseList.splice(0,1)
