@@ -17,7 +17,7 @@ const upload = multer({ dest: './uploads/' });
 router.get('/metadata', controllers.home);
 
 // fileanalyse
-router.post('/fileanalyse', upload.single('upfile'), controllers.fileAnalyse)
+// router.post('/fileanalyse', upload.single('upfile'), controllers.fileAnalyse)
 
 // export of module
 module.exports = router;

@@ -7,6 +7,8 @@ const headparser = require('./routes/headparser.js')
 const urlshortener = require('./routes/urlshortener')
 const exerciseTracker = require('./routes/exercise-tracker') 
 const metadata = require('./routes/metadata')
+const multer  = require('multer');
+const upload = multer({ dest: './uploads/' });
 const home = require('./controllers/index.js')
 const mongo_connect = require('./config')
 const bodyParser = require('body-parser')
@@ -21,6 +23,14 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
 
 app.use('/api' , metadata , exerciseTracker,  urlshortener, headparser, timestamp);
+
+app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
+  res.json({
+    name : req.file.originalname,
+    type : req.file.mimetype,
+    size : req.file.size
+  })
+})
 
 app.get('/', home)
 

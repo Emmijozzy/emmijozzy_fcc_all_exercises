@@ -92,15 +92,7 @@ controllers.getLogs = async (req, res) => {
   
       const username = user.username;
       let queryFilter = { username: username };
-    //   let queryOptions = {};
-  
-    //   if (from || to) {
-    //     queryFilter.date = {};
-    //     if (from) queryFilter.date.$gte = Date.parse(from);
-    //     if (to) queryFilter.date.$lte = Date.parse(to);
-    //   }
-  
-    //   if (limit) queryOptions.limit = Number(limit);
+;
         if (from) {
             from = new Date(from).getTime()
         } else {
@@ -114,8 +106,6 @@ controllers.getLogs = async (req, res) => {
         if (limit === undefined) {
             limit = 0
         }
-
-        // console.log(to, from, limit)
   
       const exerciseQuery = exercise.find(queryFilter, "description duration date");
   
@@ -147,7 +137,6 @@ controllers.getLogs = async (req, res) => {
         })
         if(limit > 0) {
             exerciseList = exerciseList.filter((exercise, i) => {
-                // console.log(i)
                 if(i < limit) {
                     return {
                         description : exercise.description,
@@ -156,11 +145,7 @@ controllers.getLogs = async (req, res) => {
                     }
                 }
             })
-
-        }
-
-        // exerciseList.splice(0,1)
-        
+        }        
         const exerciseCount = exerciseList.length;
         res.json({
             _id: id,
