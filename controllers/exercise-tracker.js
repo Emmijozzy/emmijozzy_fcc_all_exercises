@@ -117,7 +117,7 @@ controllers.getLogs = async (req, res) => {
 
         // console.log(to, from, limit)
   
-      const exerciseQuery = exercise.find(queryFilter, "description duration date").limit(limit);
+      const exerciseQuery = exercise.find(queryFilter, "description duration date");
   
       exerciseQuery.exec(function (err, exercises) {
         if (err) console.error(err);
@@ -145,6 +145,19 @@ controllers.getLogs = async (req, res) => {
                 date : new Date(exercise.date).toDateString()
             }
         })
+        if(limit > 0) {
+            exerciseList = exerciseList.filter((exercise, i) => {
+                // console.log(i)
+                if(i < limit) {
+                    return {
+                        description : exercise.description,
+                        duration : exercise.duration,
+                        date : exercise.date
+                    }
+                }
+            })
+
+        }
 
         // exerciseList.splice(0,1)
         
