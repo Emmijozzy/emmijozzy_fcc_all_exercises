@@ -53,7 +53,7 @@ controllers.postExercise = async (req, res) => {
     const { description, duration } = req.body
     let { date } = req.body
     const checkDate = new Date(date)
-    if (!date || checkDate.toString() === 'Invalid Date') date = undefined
+    if (!date || checkDate.toString() === 'Invalid Date') date = new Date()
     try {
       const user = await User.findById(_id).lean()
       if (!user) throw {msg: 'UserNotFound'}
@@ -77,7 +77,6 @@ controllers.postExercise = async (req, res) => {
       console.log(err)
       res.status(500).json(err)
     }
-
 
 }
 
