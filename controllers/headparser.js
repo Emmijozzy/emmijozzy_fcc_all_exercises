@@ -1,3 +1,7 @@
+/* *
+*
+* file controls head parser project
+*/
 // Dependency
 const path = require('path');
 
@@ -28,5 +32,5 @@ controllers.whoami = async (req, res) => {
         res.status(400).send(err)
     }
 }
-
+// Export of module
 module.exports = controllers;

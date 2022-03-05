@@ -1,6 +1,6 @@
 /* 
 *
-* file controls urlshortener router
+* file controls urlshortener project
 */
 
 // dependency
@@ -81,5 +81,5 @@ controllers.getUrl = async (req, res) => {
       res.redirect(foundDoc.original_url)
   }
 
-
+// Export of module
 module.exports = controllers
